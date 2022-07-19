@@ -395,7 +395,7 @@ class TCLEnv(gym.Env):
 
         # We increment the reward by the amount of return (this is according to 3.3 eq 25 first term)
         # Division by 100 to transform from cents to euros
-        reward += total_loads*self.sale_price/100
+        reward += total_loads*self.sale_price/100 # first term of eq 25
         # Penalty of charging too high prices
         self.high_price += price_action # initialy set to 0, now it's equal to the price action
         # Distributing the energy according to priority
