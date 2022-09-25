@@ -29,7 +29,7 @@ for i in range(0,DAYN,1):
     REWARDS[i]=[]
 
 
-
+wandb.init(project="RL for Microgrid - training", name=f"DQN-{MEMORY_CAPACITY}-{BATCH_SIZE}")
 class Brain:
     def __init__(self, stateCnt, actionCnt):
         self.stateCnt = stateCnt
@@ -211,8 +211,7 @@ if __name__=="__main__":
     import time
     t0=time.time()
     for _ in range(1000):
-      d = random.randrange(DAY0,DAYN)
-      env.run(agent, day=d)
+      env.run(agent, day=DAY0)
     agent.brain.model.save_weights("DQN.h5")
     # with open("REWARDS_DQN.pkl",'wb') as f:
     #     pickle.dump(REWARDS,f,pickle.HIGHEST_PROTOCOL)
@@ -221,10 +220,14 @@ if __name__=="__main__":
     #     pyplot.plot(list(rew))
     # pyplot.legend(["Day {}".format(i) for i in range(DAY0,DAY0)], loc = 'upper right')
     # pyplot.show()
+    
+    # testing over the days 0 to N
+    wandb.init(project="RL for Microgrid - testing", name=f"DQN-{MEMORY_CAPACITY}-{BATCH_SIZE}")
     agent.brain.model.load_weights("DQN.h5")
     env_test=Environment(render=True)
     for day in range(DAY0,DAYN):
         env_test.run(agent,day=day)
-    print(np.average([list(REWARDS[i])[-1] for i in range(DAY0,DAYN)]))
+    print('reward_average',np.average([list(REWARDS[i])[-1] for i in range(DAY0,DAYN)]))
     with open("REWARDS_DQN.pkl", 'wb') as f:
         pickle.dump(REWARDS,f,pickle.HIGHEST_PROTOCOL)
+        
